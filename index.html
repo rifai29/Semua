@@ -10,12 +10,12 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--teks); }
 
-        /* --- LOGIN SCREEN --- */
+        /* --- LOGIN --- */
         #login-page { position: fixed; inset: 0; background: var(--merah); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
         .box { background: var(--putih); padding: 30px; border-radius: 15px; width: 100%; max-width: 350px; text-align: center; border-bottom: 5px solid var(--kuning); }
         input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; text-align: center; font-size: 16px; outline: none; }
         
-        /* --- UI UTAMA --- */
+        /* --- NAVIGASI --- */
         #main-ui { display: none; }
         .navbar { background: var(--putih); height: 60px; display: flex; align-items: center; padding: 0 20px; position: fixed; top: 0; width: 100%; z-index: 1000; border-bottom: 4px solid var(--kuning); }
         .btn-menu { font-size: 24px; cursor: pointer; border: none; background: none; color: var(--merah); }
@@ -34,11 +34,10 @@
 
         .tombol { display: block; background: var(--merah); color: white; text-align: center; text-decoration: none; padding: 16px; border-radius: 8px; font-weight: 700; margin-top: 10px; text-transform: uppercase; font-size: 13px; cursor: pointer; border: none; width: 100%; }
 
-        /* --- PRIVASI DATA --- */
-        .hanya-rifaaa { display: none; } 
+        /* Area Rahasia */
+        .admin-only { display: none; }
         .history-card { background: #fff; border-radius: 12px; padding: 20px; border-top: 5px solid #333; margin-top: 20px; }
         .history-item { padding: 8px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 11px; }
-        .name-tag { font-weight: 700; color: var(--merah); }
     </style>
 </head>
 <body>
@@ -62,31 +61,31 @@
         <nav class="sidebar" id="sidebar">
             <div style="font-size: 12px; color: #999; margin-bottom: 10px; font-weight: 800;">MENU</div>
             <a href="#" onclick="aksiMenu()">Beranda</a>
-            <a href="https://rifai29.github.io/Laporanynpw/" target="_blank">Laporan</a>
-            <a href="https://rifai29.github.io/Laporan-minesan/" target="_blank" class="hanya-rifaaa">Minesan</a>
+            <div id="menu-list">
+                </div>
             <a href="javascript:void(0)" onclick="location.reload()" style="color: var(--merah); margin-top: 20px; border-top: 2px solid #eee;">Keluar</a>
         </nav>
 
         <div class="konten">
             <div class="kartu">
-                <p style="font-size: 11px; font-weight: 800; color: #999; text-transform: uppercase;">User Terverifikasi:</p>
+                <p style="font-size: 11px; font-weight: 800; color: #999; text-transform: uppercase;">Login Sebagai:</p>
                 <h1 id="display-name" style="color:var(--merah); font-size: 28px; margin: 5px 0;">-</h1>
-                <p style="font-size: 12px; color: #666;">Versi: v1.1.0</p>
+                <p style="font-size: 12px; color: #666;">Status: Terverifikasi</p>
             </div>
 
             <div class="kartu aksen-kuning">
-                <h3 style="font-size: 14px; margin-bottom: 10px;">LAPORAN UMUM</h3>
+                <h3 style="font-size: 14px; margin-bottom: 10px;">LAPORAN YNPW</h3>
                 <a href="https://rifai29.github.io/Laporanynpw/" target="_blank" class="tombol">Buka Laporan</a>
             </div>
 
-            <div class="hanya-rifaaa" id="admin-stuff">
-                <div class="kartu aksen-kuning">
-                    <h3 style="font-size: 14px; margin-bottom: 10px;">DATA PRIBADI</h3>
+            <div id="area-admin" class="admin-only">
+                <div class="kartu aksen-kuning" style="border-top-color: #333;">
+                    <h3 style="font-size: 14px; margin-bottom: 10px;">DATA MINESAN</h3>
                     <a href="https://rifai29.github.io/Laporan-minesan/" target="_blank" class="tombol" style="background: #333;">Buka Minesan</a>
                 </div>
 
                 <div class="history-card">
-                    <h3 style="font-size: 14px; color: #333; margin-bottom: 10px;">RIWAYAT AKSES</h3>
+                    <h3 style="font-size: 14px; color: #333; margin-bottom: 10px;">HISTORY PENGUNJUNG</h3>
                     <div id="history-content"></div>
                 </div>
             </div>
@@ -98,27 +97,35 @@
             const rawName = document.getElementById('userName').value.trim();
             const lowerName = rawName.toLowerCase();
             
-            if(rawName === "") return alert("Nama wajib diisi!");
+            if(rawName === "") return alert("Nama tidak boleh kosong!");
 
-            // 1. Simpan Log
+            // 1. Catat Log
             let logs = JSON.parse(localStorage.getItem('loginHistory') || "[]");
             logs.unshift({nama: rawName, jam: new Date().toLocaleString('id-ID')});
             localStorage.setItem('loginHistory', JSON.stringify(logs));
 
-            // 2. Tampilkan UI
+            // 2. Buka UI Dasar
             document.getElementById('login-page').style.display = 'none';
             document.getElementById('main-ui').style.display = 'block';
             document.getElementById('display-name').innerText = rawName;
 
-            // 3. LOGIKA AKSES KHUSUS
+            // 3. LOGIKA SIDEBAR & AREA RAHASIA
+            const menuContainer = document.getElementById('menu-list');
+            
+            // Tambahkan Laporan YNPW untuk SEMUA orang
+            let htmlMenu = `<a href="https://rifai29.github.io/Laporanynpw/" target="_blank">Laporan YNPW</a>`;
+
             if (lowerName === "rifaaa") {
-                // Tampilkan fitur Minesan dan History
-                const elements = document.getElementsByClassName('hanya-rifaaa');
-                for(let el of elements) {
-                    el.style.display = 'block';
-                }
+                // Tambahkan Minesan ke Sidebar HANYA jika rifaaa
+                htmlMenu += `<a href="https://rifai29.github.io/Laporan-minesan/" target="_blank">Minesan</a>`;
+                
+                // Munculkan kartu Minesan & History di halaman utama
+                document.getElementById('area-admin').style.display = 'block';
                 renderHistory();
             }
+
+            // Masukkan menu yang sudah dibuat ke dalam sidebar
+            menuContainer.innerHTML = htmlMenu;
         }
 
         function renderHistory() {
@@ -126,7 +133,7 @@
             const logs = JSON.parse(localStorage.getItem('loginHistory') || "[]");
             container.innerHTML = logs.map(l => `
                 <div class="history-item">
-                    <span class="name-tag">${l.nama}</span>
+                    <span style="font-weight:700; color:var(--merah);">${l.nama}</span>
                     <span style="color:#888;">${l.jam}</span>
                 </div>
             `).join('');
