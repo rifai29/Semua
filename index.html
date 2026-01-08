@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Laporan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --merah: #e1211a; --kuning: #ffcf00; --putih: #ffffff; --bg: #f8f8f8; --teks: #333333; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--teks); }
+
+        /* --- LOGIN SCREEN --- */
+        #login-page { position: fixed; inset: 0; background: var(--merah); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
+        .box { background: var(--putih); padding: 30px; border-radius: 15px; width: 100%; max-width: 350px; text-align: center; border-bottom: 5px solid var(--kuning); }
+        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; text-align: center; font-size: 16px; outline: none; }
+        
+        /* --- UI UTAMA --- */
+        #main-ui { display: none; }
+        .navbar { background: var(--putih); height: 60px; display: flex; align-items: center; padding: 0 20px; position: fixed; top: 0; width: 100%; z-index: 1000; border-bottom: 4px solid var(--kuning); }
+        .btn-menu { font-size: 24px; cursor: pointer; border: none; background: none; color: var(--merah); }
+        .logo { margin-left: 15px; font-weight: 800; color: var(--merah); letter-spacing: 1px; }
+
+        .sidebar { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: var(--putih); z-index: 1001; padding: 20px; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        .sidebar.active { left: 0; }
+        .sidebar a { display: block; padding: 15px; color: var(--teks); text-decoration: none; font-weight: 600; border-bottom: 1px solid #eee; }
+
+        .gelap { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 1000; }
+        .gelap.tampil { display: block; }
+
+        .konten { padding: 85px 20px 40px; max-width: 500px; margin: 0 auto; }
+        .kartu { background: var(--putih); border-radius: 12px; padding: 25px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid var(--merah); }
+        .kartu.aksen-kuning { border-top: 5px solid var(--kuning); }
+
+        .tombol { display: block; background: var(--merah); color: white; text-align: center; text-decoration: none; padding: 16px; border-radius: 8px; font-weight: 700; margin-top: 10px; text-transform: uppercase; font-size: 13px; cursor: pointer; border: none; width: 100%; }
+
+        /* --- PRIVASI DATA --- */
+        .hanya-rifaaa { display: none; } 
+        .history-card { background: #fff; border-radius: 12px; padding: 20px; border-top: 5px solid #333; margin-top: 20px; }
+        .history-item { padding: 8px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 11px; }
+        .name-tag { font-weight: 700; color: var(--merah); }
+    </style>
+</head>
+<body>
+
+    <div id="login-page">
+        <div class="box">
+            <h2 style="color:var(--merah); margin-bottom:20px; font-size:18px;">LOGIN SISTEM</h2>
+            <input type="text" id="userName" placeholder="Masukkan Nama">
+            <button onclick="masuk()" class="tombol">MASUK</button>
+        </div>
+    </div>
+
+    <div id="main-ui">
+        <div class="navbar">
+            <button class="btn-menu" onclick="aksiMenu()">☰</button>
+            <div class="logo">LAPORAN</div>
+        </div>
+
+        <div class="gelap" id="gelap" onclick="aksiMenu()"></div>
+
+        <nav class="sidebar" id="sidebar">
+            <div style="font-size: 12px; color: #999; margin-bottom: 10px; font-weight: 800;">MENU</div>
+            <a href="#" onclick="aksiMenu()">Beranda</a>
+            <a href="https://rifai29.github.io/Laporanynpw/" target="_blank">Laporan</a>
+            <a href="https://rifai29.github.io/Laporan-minesan/" target="_blank" class="hanya-rifaaa">Minesan</a>
+            <a href="javascript:void(0)" onclick="location.reload()" style="color: var(--merah); margin-top: 20px; border-top: 2px solid #eee;">Keluar</a>
+        </nav>
+
+        <div class="konten">
+            <div class="kartu">
+                <p style="font-size: 11px; font-weight: 800; color: #999; text-transform: uppercase;">User Terverifikasi:</p>
+                <h1 id="display-name" style="color:var(--merah); font-size: 28px; margin: 5px 0;">-</h1>
+                <p style="font-size: 12px; color: #666;">Versi: v1.1.0</p>
+            </div>
+
+            <div class="kartu aksen-kuning">
+                <h3 style="font-size: 14px; margin-bottom: 10px;">LAPORAN UMUM</h3>
+                <a href="https://rifai29.github.io/Laporanynpw/" target="_blank" class="tombol">Buka Laporan</a>
+            </div>
+
+            <div class="hanya-rifaaa" id="admin-stuff">
+                <div class="kartu aksen-kuning">
+                    <h3 style="font-size: 14px; margin-bottom: 10px;">DATA PRIBADI</h3>
+                    <a href="https://rifai29.github.io/Laporan-minesan/" target="_blank" class="tombol" style="background: #333;">Buka Minesan</a>
+                </div>
+
+                <div class="history-card">
+                    <h3 style="font-size: 14px; color: #333; margin-bottom: 10px;">RIWAYAT AKSES</h3>
+                    <div id="history-content"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function masuk() {
+            const rawName = document.getElementById('userName').value.trim();
+            const lowerName = rawName.toLowerCase();
+            
+            if(rawName === "") return alert("Nama wajib diisi!");
+
+            // 1. Simpan Log
+            let logs = JSON.parse(localStorage.getItem('loginHistory') || "[]");
+            logs.unshift({nama: rawName, jam: new Date().toLocaleString('id-ID')});
+            localStorage.setItem('loginHistory', JSON.stringify(logs));
+
+            // 2. Tampilkan UI
+            document.getElementById('login-page').style.display = 'none';
+            document.getElementById('main-ui').style.display = 'block';
+            document.getElementById('display-name').innerText = rawName;
+
+            // 3. LOGIKA AKSES KHUSUS
+            if (lowerName === "rifaaa") {
+                // Tampilkan fitur Minesan dan History
+                const elements = document.getElementsByClassName('hanya-rifaaa');
+                for(let el of elements) {
+                    el.style.display = 'block';
+                }
+                renderHistory();
+            }
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-content');
+            const logs = JSON.parse(localStorage.getItem('loginHistory') || "[]");
+            container.innerHTML = logs.map(l => `
+                <div class="history-item">
+                    <span class="name-tag">${l.nama}</span>
+                    <span style="color:#888;">${l.jam}</span>
+                </div>
+            `).join('');
+        }
+
+        function aksiMenu() {
+            document.getElementById('sidebar').classList.toggle('active');
+            document.getElementById('gelap').classList.toggle('tampil');
+        }
+    </script>
+</body>
+</html>
