@@ -2,92 +2,144 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sistem Laporan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Sistem Laporan v1.6</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --merah: #e1211a; --kuning: #ffcf00; --putih: #ffffff; --bg: #f8f8f8; --teks: #333333; }
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--teks); }
+        :root { 
+            --merah-midi: #c1121c; 
+            --merah-soft: #fdecea;
+            --bg-body: #f8fafc;
+            --teks: #1e293b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg-body); color: var(--teks); }
 
         /* --- LOGIN --- */
-        #login-page { position: fixed; inset: 0; background: var(--merah); display: flex; align-items: center; justify-content: center; z-index: 2000; padding: 20px; }
-        .box { background: var(--putih); padding: 30px; border-radius: 15px; width: 100%; max-width: 350px; text-align: center; border-bottom: 5px solid var(--kuning); }
-        input { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; text-align: center; font-size: 16px; outline: none; }
-        
-        /* --- NAVIGASI --- */
+        #login-page {
+            position: fixed; inset: 0; background: #ffffff;
+            display: flex; align-items: center; justify-content: center; z-index: 2000;
+        }
+        .login-box { width: 85%; max-width: 320px; text-align: center; }
+        .login-box h2 { font-weight: 800; color: var(--merah-midi); margin-bottom: 30px; font-size: 24px; }
+        .input-style {
+            width: 100%; padding: 15px; border: 1.5px solid #e2e8f0;
+            border-radius: 12px; margin-bottom: 15px; font-size: 16px; outline: none; background: #f1f5f9;
+        }
+        .btn-red {
+            background: var(--merah-midi); color: white; border: none; padding: 16px;
+            border-radius: 14px; font-size: 16px; font-weight: 700; width: 100%; cursor: pointer;
+        }
+
+        /* --- NAVBAR --- */
         #main-ui { display: none; }
-        .navbar { background: var(--putih); height: 60px; display: flex; align-items: center; padding: 0 20px; position: fixed; top: 0; width: 100%; z-index: 1000; border-bottom: 4px solid var(--kuning); }
-        .btn-menu { font-size: 24px; cursor: pointer; border: none; background: none; color: var(--merah); }
-        .logo { margin-left: 15px; font-weight: 800; color: var(--merah); letter-spacing: 1px; }
+        .navbar {
+            height: 60px; background: white; display: flex; align-items: center;
+            padding: 0 20px; position: fixed; top: 0; width: 100%; z-index: 1000;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .nav-title { font-weight: 800; font-size: 14px; margin-left: 15px; }
 
-        .sidebar { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: var(--putih); z-index: 1001; padding: 20px; transition: 0.3s; box-shadow: 2px 0 10px rgba(0,0,0,0.1); }
+        /* --- SIDEBAR --- */
+        .sidebar {
+            position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
+            background: white; z-index: 1001; transition: 0.3s; padding: 40px 20px;
+        }
         .sidebar.active { left: 0; }
-        .sidebar a { display: block; padding: 15px; color: var(--teks); text-decoration: none; font-weight: 600; border-bottom: 1px solid #eee; }
+        .sidebar a { display: block; padding: 16px; color: var(--teks); text-decoration: none; font-weight: 600; }
+        .overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); display: none; z-index: 1000; }
 
-        .gelap { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 1000; }
-        .gelap.tampil { display: block; }
+        /* --- CONTENT --- */
+        .container { padding: 85px 20px 30px; max-width: 480px; margin: 0 auto; }
+        
+        .user-card {
+            background: white; padding: 20px; border-radius: 20px;
+            margin-bottom: 20px; border-top: 4px solid var(--merah-midi);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .user-card h1 { font-size: 24px; font-weight: 800; }
 
-        .konten { padding: 85px 20px 40px; max-width: 500px; margin: 0 auto; }
-        .kartu { background: var(--putih); border-radius: 12px; padding: 25px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid var(--merah); }
-        .kartu.aksen-kuning { border-top: 5px solid var(--kuning); }
+        .section-label { font-size: 11px; font-weight: 800; color: #94a3b8; margin: 20px 0 10px 5px; text-transform: uppercase; }
 
-        .tombol { display: block; background: var(--merah); color: white; text-align: center; text-decoration: none; padding: 16px; border-radius: 8px; font-weight: 700; margin-top: 10px; text-transform: uppercase; font-size: 13px; cursor: pointer; border: none; width: 100%; }
+        .menu-list { background: white; border-radius: 18px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.02); border: 1px solid #f1f5f9; }
+        .menu-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 18px 20px; text-decoration: none; color: var(--teks);
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .menu-item:last-child { border-bottom: none; }
+        .menu-item span { font-size: 14px; font-weight: 600; }
 
-        /* Area Rahasia */
-        .admin-only { display: none; }
-        .history-card { background: #fff; border-radius: 12px; padding: 20px; border-top: 5px solid #333; margin-top: 20px; }
-        .history-item { padding: 8px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; font-size: 11px; }
+        /* --- SCROLLABLE HISTORY AREA --- */
+        .history-container {
+            background: white; border-radius: 18px; 
+            max-height: 200px; /* Batasi tinggi kotak history */
+            overflow-y: auto;  /* Biar bisa di-scroll di dalam */
+            border: 1px solid #f1f5f9;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .log-box { 
+            padding: 12px 18px; display: flex; justify-content: space-between; 
+            font-size: 12px; border-bottom: 1px solid #f8fafc; 
+        }
+        .log-box:last-child { border-bottom: none; }
+        .log-user { font-weight: 700; color: var(--merah-midi); }
     </style>
 </head>
 <body>
 
     <div id="login-page">
-        <div class="box">
-            <h2 style="color:var(--merah); margin-bottom:20px; font-size:18px;">LOGIN SISTEM</h2>
-            <input type="text" id="userName" placeholder="Masukkan Nama">
-            <button onclick="masuk()" class="tombol">MASUK</button>
+        <div class="login-box">
+            <h2>Laporan</h2>
+            <input type="text" id="userName" class="input-style" placeholder="Masukkan Nama">
+            <button onclick="masuk()" class="btn-red">Masuk</button>
         </div>
     </div>
 
     <div id="main-ui">
         <div class="navbar">
-            <button class="btn-menu" onclick="aksiMenu()">☰</button>
-            <div class="logo">LAPORAN</div>
+            <div onclick="toggleMenu()" style="cursor:pointer; font-size:20px;">☰</div>
+            <div class="nav-title">DASHBOARD</div>
         </div>
 
-        <div class="gelap" id="gelap" onclick="aksiMenu()"></div>
+        <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
         <nav class="sidebar" id="sidebar">
-            <div style="font-size: 12px; color: #999; margin-bottom: 10px; font-weight: 800;">MENU</div>
-            <a href="#" onclick="aksiMenu()">Beranda</a>
-            <div id="menu-list">
-                </div>
-            <a href="javascript:void(0)" onclick="location.reload()" style="color: var(--merah); margin-top: 20px; border-top: 2px solid #eee;">Keluar</a>
+            <div id="side-links"></div>
+            <a href="javascript:void(0)" onclick="location.reload()" style="color: var(--merah-midi); margin-top: 20px; border-top: 1px solid #eee;">Logout</a>
         </nav>
 
-        <div class="konten">
-            <div class="kartu">
-                <p style="font-size: 11px; font-weight: 800; color: #999; text-transform: uppercase;">Login Sebagai:</p>
-                <h1 id="display-name" style="color:var(--merah); font-size: 28px; margin: 5px 0;">-</h1>
-                <p style="font-size: 12px; color: #666;">Status: Terverifikasi</p>
+        <div class="container">
+            <div class="user-card">
+                <span style="font-size:11px; color:#94a3b8; font-weight:700;">USER</span>
+                <h1 id="display-name">-</h1>
             </div>
 
-            <div class="kartu aksen-kuning">
-                <h3 style="font-size: 14px; margin-bottom: 10px;">LAPORAN YNPW</h3>
-                <a href="https://rifai29.github.io/Laporanynpw/" target="_blank" class="tombol">Buka Laporan</a>
+            <div class="section-label">Laporan Umum</div>
+            <div class="menu-list">
+                <a href="https://rifai29.github.io/Laporanynpw/" target="_blank" class="menu-item">
+                    <span>Laporan YNPW</span>
+                    <span style="color:#cbd5e1;">❯</span>
+                </a>
             </div>
 
-            <div id="area-admin" class="admin-only">
-                <div class="kartu aksen-kuning" style="border-top-color: #333;">
-                    <h3 style="font-size: 14px; margin-bottom: 10px;">DATA MINESAN</h3>
-                    <a href="https://rifai29.github.io/Laporan-minesan/" target="_blank" class="tombol" style="background: #333;">Buka Minesan</a>
+            <div id="area-admin" style="display:none;">
+                <div class="section-label">Akses Admin</div>
+                <div class="menu-list">
+                    <a href="https://rifai29.github.io/Laporankaryawan/" target="_blank" class="menu-item">
+                        <span>Laporan Karyawan</span>
+                        <span style="color:#cbd5e1;">❯</span>
+                    </a>
+                    <a href="https://rifai29.github.io/Laporan-minesan/" target="_blank" class="menu-item">
+                        <span>Laporan Minesan</span>
+                        <span style="color:#cbd5e1;">❯</span>
+                    </a>
                 </div>
 
-                <div class="history-card">
-                    <h3 style="font-size: 14px; color: #333; margin-bottom: 10px;">HISTORY PENGUNJUNG</h3>
-                    <div id="history-content"></div>
-                </div>
+                <div class="section-label">History Akses (Scroll)</div>
+                <div class="history-container" id="history-content">
+                    </div>
             </div>
         </div>
     </div>
@@ -95,53 +147,45 @@
     <script>
         function masuk() {
             const rawName = document.getElementById('userName').value.trim();
+            if(!rawName) return;
+
             const lowerName = rawName.toLowerCase();
             
-            if(rawName === "") return alert("Nama tidak boleh kosong!");
-
-            // 1. Catat Log
             let logs = JSON.parse(localStorage.getItem('loginHistory') || "[]");
-            logs.unshift({nama: rawName, jam: new Date().toLocaleString('id-ID')});
+            logs.unshift({nama: rawName, jam: new Date().toLocaleString('id-ID', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'})});
             localStorage.setItem('loginHistory', JSON.stringify(logs));
 
-            // 2. Buka UI Dasar
             document.getElementById('login-page').style.display = 'none';
             document.getElementById('main-ui').style.display = 'block';
             document.getElementById('display-name').innerText = rawName;
 
-            // 3. LOGIKA SIDEBAR & AREA RAHASIA
-            const menuContainer = document.getElementById('menu-list');
-            
-            // Tambahkan Laporan YNPW untuk SEMUA orang
-            let htmlMenu = `<a href="https://rifai29.github.io/Laporanynpw/" target="_blank">Laporan YNPW</a>`;
+            renderMenu(lowerName);
+        }
 
-            if (lowerName === "rifaaa") {
-                // Tambahkan Minesan ke Sidebar HANYA jika rifaaa
-                htmlMenu += `<a href="https://rifai29.github.io/Laporan-minesan/" target="_blank">Minesan</a>`;
-                
-                // Munculkan kartu Minesan & History di halaman utama
+        function renderMenu(name) {
+            const side = document.getElementById('side-links');
+            let links = `<a href="https://rifai29.github.io/Laporanynpw/" target="_blank">Laporan YNPW</a>`;
+
+            if (name === "rifaaa") {
+                links += `<a href="https://rifai29.github.io/Laporankaryawan/" target="_blank">Laporan Karyawan</a>`;
+                links += `<a href="https://rifai29.github.io/Laporan-minesan/" target="_blank">Laporan Minesan</a>`;
                 document.getElementById('area-admin').style.display = 'block';
-                renderHistory();
+                
+                const hist = JSON.parse(localStorage.getItem('loginHistory') || "[]");
+                document.getElementById('history-content').innerHTML = hist.map(l => `
+                    <div class="log-box">
+                        <span class="log-user">${l.nama}</span>
+                        <span style="color:#94a3b8">${l.jam}</span>
+                    </div>
+                `).join('');
             }
-
-            // Masukkan menu yang sudah dibuat ke dalam sidebar
-            menuContainer.innerHTML = htmlMenu;
+            side.innerHTML = links;
         }
 
-        function renderHistory() {
-            const container = document.getElementById('history-content');
-            const logs = JSON.parse(localStorage.getItem('loginHistory') || "[]");
-            container.innerHTML = logs.map(l => `
-                <div class="history-item">
-                    <span style="font-weight:700; color:var(--merah);">${l.nama}</span>
-                    <span style="color:#888;">${l.jam}</span>
-                </div>
-            `).join('');
-        }
-
-        function aksiMenu() {
+        function toggleMenu() {
             document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('gelap').classList.toggle('tampil');
+            const over = document.getElementById('overlay');
+            over.style.display = over.style.display === 'block' ? 'none' : 'block';
         }
     </script>
 </body>
